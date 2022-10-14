@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import styled from "styled-components";
+import { useState } from "react";
+import { AddTransactionModal } from "./components/AddTransactionModal";
+import { Dashboard } from "./components/Dashboard";
+import { Header } from "./components/Header";
+import { GlobalStyle } from "./styles/global";
 
-function App() {
+// const Title = styled.h1`
+//   font-size: 64px;
+//   color: #888;
+
+//   button {
+//     background-color: red;
+//   }
+// `;
+
+export function App() {
+  const [isNewTransactionModalOpen, setNewTransactionModalOpen] =
+    useState(false);
+
+  function handleNewTransactionModal() {
+    setNewTransactionModalOpen(!isNewTransactionModalOpen);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* <Title>
+      hello, world!
+      <button>Teste</button>
+      </Title> */}
+
+      <Header handleNewTransactionModal={handleNewTransactionModal} />
+
+      <Dashboard handleNewTransactionModal={handleNewTransactionModal} />
+
+      <AddTransactionModal
+        isOpen={isNewTransactionModalOpen}
+        handleModal={handleNewTransactionModal}
+      />
+
+      <GlobalStyle />
+    </>
   );
 }
-
-export default App;

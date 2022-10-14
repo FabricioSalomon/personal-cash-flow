@@ -1,0 +1,7 @@
+Blue: #5429CC
+Green: #33CC95
+Red: #E52E4D
+Shape: #FFFFFF
+Title: #363F5F
+Text: #969CB2
+Background: #F0F2F5
