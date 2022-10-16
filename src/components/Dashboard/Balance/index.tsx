@@ -1,26 +1,64 @@
 import moment from "moment";
+import { useContext } from "react";
 import { NumericFormat } from "react-number-format";
-import { CashFlow } from "..";
-import { CardOptions, CardOption } from "./Cards";
+import { TransactionsContext } from "../../../TransactionsContext";
+import { CardOption, CardOptions } from "./Cards";
 import {
-  CardContent,
   CardContainer,
+  CardContent,
+  Description,
   Title,
   Value,
-  Description,
 } from "./styles";
 
-type BalanceProps = {
-  income: CashFlow;
-  outcome: CashFlow;
-};
+export function Balance() {
+  const { transactions } = useContext(TransactionsContext);
 
-export function Balance({ income, outcome }: BalanceProps) {
+  const income = transactions.reduce(
+    (income, transaction) => {
+      return {
+        total:
+          transaction.type === "income"
+            ? income.total + transaction.amount
+            : income.total,
+        lastUpdate: moment(income.lastUpdate).isBefore(transaction.createdAt)
+          ? transaction.createdAt
+          : income.lastUpdate,
+        currency: transaction.currency,
+      };
+    },
+    {
+      total: 0,
+      lastUpdate: new Date(0),
+      currency: "R$",
+    }
+  );
+
+  const outcome = transactions.reduce(
+    (outcome, transaction) => {
+      return {
+        total:
+          transaction.type === "outcome"
+            ? outcome.total + transaction.amount
+            : outcome.total,
+        lastUpdate: moment(outcome.lastUpdate).isBefore(transaction.createdAt)
+          ? transaction.createdAt
+          : outcome.lastUpdate,
+        currency: transaction.currency,
+      };
+    },
+    {
+      total: 0,
+      lastUpdate: new Date(0),
+      currency: "R$",
+    }
+  );
+
   function showValue(card: CardOption) {
     if (card.id === "income") {
       return (
         <NumericFormat
-          value={income.amount.toFixed(2)}
+          value={income.total.toFixed(2)}
           displayType={"text"}
           prefix={` ${income.currency} `}
         />
@@ -28,13 +66,13 @@ export function Balance({ income, outcome }: BalanceProps) {
     } else if (card.id === "outcome") {
       return (
         <NumericFormat
-          value={outcome.amount.toFixed(2)}
+          value={outcome.total.toFixed(2)}
           displayType={"text"}
           prefix={` ${outcome.currency} `}
         />
       );
     } else {
-      const balance = income.amount + outcome.amount;
+      const balance = income.total + outcome.total;
       return (
         <NumericFormat
           value={balance.toFixed(2)}

@@ -1,13 +1,12 @@
-import { NumericFormat } from "react-number-format";
-import { DesktopContainer, TransactionTable, Value } from "./styles";
-import { Transaction } from "../../../../index";
 import moment from "moment";
+import { useContext } from "react";
+import { NumericFormat } from "react-number-format";
+import { TransactionsContext } from "../../../../TransactionsContext";
+import { DesktopContainer, TransactionTable, Value } from "./styles";
 
-type DesktopTableProps = {
-  transactions: Transaction[];
-};
+export function DesktopTable() {
+  const { transactions } = useContext(TransactionsContext);
 
-export function DesktopTable({ transactions }: DesktopTableProps) {
   return (
     <DesktopContainer>
       <TransactionTable>

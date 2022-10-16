@@ -4,6 +4,7 @@ import { AddTransactionModal } from "./components/AddTransactionModal";
 import { Dashboard } from "./components/Dashboard";
 import { Header } from "./components/Header";
 import { GlobalStyle } from "./styles/global";
+import { TransactionsProvider } from "./TransactionsContext";
 
 // const Title = styled.h1`
 //   font-size: 64px;
@@ -23,7 +24,7 @@ export function App() {
   }
 
   return (
-    <>
+    <TransactionsProvider>
       {/* <Title>
       hello, world!
       <button>Teste</button>
@@ -39,6 +40,6 @@ export function App() {
       />
 
       <GlobalStyle />
-    </>
+    </TransactionsProvider>
   );
 }

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Content = styled.form`
   display: flex;
@@ -26,7 +26,7 @@ export const Content = styled.form`
     }
   }
 
-  button[type='submit'] {
+  button[type="submit"] {
     width: 100%;
     margin-top: 1rem;
     color: var(--shape);

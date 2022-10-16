@@ -1,7 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import Modal from "react-modal";
 import closeImg from "../../assets/close.svg";
-import { api } from "../../services/api";
+import { TransactionsContext } from "../../TransactionsContext";
 import { CashFlow } from "./CashFlow";
 import { Content, Header } from "./styles";
 
@@ -20,12 +20,13 @@ export function AddTransactionModal({
   isOpen,
   handleModal,
 }: AddTransactionModalProps) {
+  const { createNewTransaction } = useContext(TransactionsContext);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
-  const [type, setType] = useState("");
+  const [type, setType] = useState<"income" | "outcome">("income");
   const [category, setCategory] = useState("");
 
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
     const newTransaction = {
@@ -35,9 +36,13 @@ export function AddTransactionModal({
       category,
     };
 
-    api.post("/transaction", newTransaction).then((newTransaction) => {
-      console.log(newTransaction);
-    });
+    await createNewTransaction(newTransaction);
+
+    handleModal();
+    setAmount(0);
+    setCategory("");
+    setType("income");
+    setDescription("");
   }
 
   return (
@@ -80,4 +85,7 @@ export function AddTransactionModal({
       </Content>
     </Modal>
   );
+}
+function onRequestClose() {
+  throw new Error("Function not implemented.");
 }

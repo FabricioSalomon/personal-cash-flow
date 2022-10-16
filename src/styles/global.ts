@@ -89,7 +89,7 @@ export const GlobalStyle = createGlobalStyle`
         padding: 3rem;
         border-radius: 0.5rem;
         width: 70%;
-        height: 70%;
+        height: 90%;
         max-width: 700px;
         
         @media (max-width: 768px) {

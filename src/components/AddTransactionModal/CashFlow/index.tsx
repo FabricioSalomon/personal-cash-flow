@@ -4,7 +4,7 @@ import { RadioBox, TransactionTypeContainer } from "./styles";
 
 type CashFlowProps = {
   transactionType: string;
-  onTransactionTypeChange: (type: string) => void;
+  onTransactionTypeChange: (type: "income" | "outcome") => void;
 };
 
 export function CashFlow({

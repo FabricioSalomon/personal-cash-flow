@@ -1,6 +1,7 @@
 import moment from "moment";
+import { useContext } from "react";
 import { NumericFormat } from "react-number-format";
-import { Transaction } from "../../../../index";
+import { TransactionsContext } from "../../../../TransactionsContext";
 import {
   Card,
   Description,
@@ -12,11 +13,9 @@ import {
   Value,
 } from "./styles";
 
-type MobileTableProps = {
-  transactions: Transaction[];
-};
+export function MobileTable() {
+  const { transactions } = useContext(TransactionsContext);
 
-export function MobileTable({ transactions }: MobileTableProps) {
   return (
     <MobileContainer>
       <MobileHeader>
