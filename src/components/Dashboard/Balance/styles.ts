@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const CardContainer = styled.div`
+type CardContainerData = {
+  isPositive: boolean;
+};
+
+export const CardContainer = styled.div<CardContainerData>`
   /* Alternativa
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
@@ -21,7 +25,9 @@ export const CardContainer = styled.div`
   }
 
   #balance {
-    background: var(--green);
+    background: ${({ isPositive }) => {
+      return isPositive ? "var(--green)" : "var(--red)";
+    }};
     color: var(--shape);
   }
 

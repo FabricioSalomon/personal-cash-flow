@@ -14,43 +14,44 @@ import {
 export function Balance() {
   const { transactions } = useContext(TransactionsContext);
 
-  const income = transactions.reduce(
-    (income, transaction) => {
+  const summary = transactions.reduce(
+    (cashFlow, transaction) => {
+      if (transaction.type === "income") {
+        cashFlow.income = {
+          total: cashFlow.income.total + transaction.amount,
+          lastUpdate: checkLastUpdate(
+            transaction.createdAt,
+            cashFlow.income.lastUpdate
+          ),
+          currency: transaction.currency,
+        };
+      } else {
+        cashFlow.outcome = {
+          total: cashFlow.outcome.total + transaction.amount,
+          lastUpdate: checkLastUpdate(
+            transaction.createdAt,
+            cashFlow.outcome.lastUpdate
+          ),
+          currency: transaction.currency,
+        };
+      }
       return {
-        total:
-          transaction.type === "income"
-            ? income.total + transaction.amount
-            : income.total,
-        lastUpdate: moment(income.lastUpdate).isBefore(transaction.createdAt)
-          ? transaction.createdAt
-          : income.lastUpdate,
-        currency: transaction.currency,
+        ...cashFlow,
+        balance: cashFlow.income.total + cashFlow.outcome.total,
       };
     },
     {
-      total: 0,
-      lastUpdate: new Date(0),
-      currency: "R$",
-    }
-  );
-
-  const outcome = transactions.reduce(
-    (outcome, transaction) => {
-      return {
-        total:
-          transaction.type === "outcome"
-            ? outcome.total + transaction.amount
-            : outcome.total,
-        lastUpdate: moment(outcome.lastUpdate).isBefore(transaction.createdAt)
-          ? transaction.createdAt
-          : outcome.lastUpdate,
-        currency: transaction.currency,
-      };
-    },
-    {
-      total: 0,
-      lastUpdate: new Date(0),
-      currency: "R$",
+      income: {
+        total: 0,
+        lastUpdate: new Date(0),
+        currency: "R$",
+      },
+      outcome: {
+        total: 0,
+        lastUpdate: new Date(0),
+        currency: "R$",
+      },
+      balance: 0,
     }
   );
 
@@ -58,26 +59,25 @@ export function Balance() {
     if (card.id === "income") {
       return (
         <NumericFormat
-          value={income.total.toFixed(2)}
+          value={summary.income.total.toFixed(2)}
           displayType={"text"}
-          prefix={` ${income.currency} `}
+          prefix={` ${summary.income.currency} `}
         />
       );
     } else if (card.id === "outcome") {
       return (
         <NumericFormat
-          value={outcome.total.toFixed(2)}
+          value={summary.outcome.total.toFixed(2)}
           displayType={"text"}
-          prefix={` ${outcome.currency} `}
+          prefix={` ${summary.outcome.currency} `}
         />
       );
     } else {
-      const balance = income.total + outcome.total;
       return (
         <NumericFormat
-          value={balance.toFixed(2)}
+          value={summary.balance.toFixed(2)}
           displayType={"text"}
-          prefix={` ${income.currency} `}
+          prefix={` ${summary.income.currency} `}
         />
       );
     }
@@ -86,14 +86,14 @@ export function Balance() {
   function showDescription(card: CardOption) {
     if (
       card.id !== "balance" &&
-      moment(income.lastUpdate).format("YYYY") > "2000"
+      moment(summary.income.lastUpdate).format("YYYY") > "2000"
     ) {
       if (card.id === "income") {
         return (
           <Description>
             <span>
               Última atualização:{" "}
-              {moment(income.lastUpdate).format("DD MMMM YYYY")}
+              {moment(summary.income.lastUpdate).format("DD MMMM YYYY")}
             </span>
           </Description>
         );
@@ -102,7 +102,7 @@ export function Balance() {
           <Description>
             <span>
               Última atualização:{" "}
-              {moment(outcome.lastUpdate).format("DD MMMM YYYY")}
+              {moment(summary.outcome.lastUpdate).format("DD MMMM YYYY")}
             </span>
           </Description>
         );
@@ -110,8 +110,14 @@ export function Balance() {
     }
   }
 
+  function checkLastUpdate(currentDate: Date, lastUpdate: Date) {
+    return moment(lastUpdate).isBefore(currentDate) ? currentDate : lastUpdate;
+  }
+
   return (
-    <CardContainer>
+    <CardContainer
+      isPositive={summary.income.total + summary.outcome.total >= 0}
+    >
       {CardOptions.map((card) => {
         return (
           <CardContent id={card.id} key={card.title}>

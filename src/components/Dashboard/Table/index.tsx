@@ -16,7 +16,7 @@ export function Table({ handleNewTransactionModal }: TableProps) {
       {transactions.length > 0 ? (
         <>
           <MobileTable />
-          <DesktopTable />{" "}
+          <DesktopTable />
         </>
       ) : (
         <NoTransactions handleNewTransactionModal={handleNewTransactionModal} />
