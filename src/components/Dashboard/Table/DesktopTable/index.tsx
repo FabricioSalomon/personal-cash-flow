@@ -1,11 +1,10 @@
 import moment from "moment";
-import { useContext } from "react";
 import { NumericFormat } from "react-number-format";
-import { TransactionsContext } from "../../../../TransactionsContext";
+import { useTransactions } from "../../../../hooks/useTransactions";
 import { DesktopContainer, TransactionTable, Value } from "./styles";
 
 export function DesktopTable() {
-  const { transactions } = useContext(TransactionsContext);
+  const { transactions } = useTransactions();
 
   return (
     <DesktopContainer>

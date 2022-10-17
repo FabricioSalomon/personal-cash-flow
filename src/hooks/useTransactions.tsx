@@ -1,5 +1,11 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { api } from "./services/api";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { api } from "../services/api";
 
 /*
     Para que minha aplicação tenha acesso aos contextos criados por mime, é necessário ter um provider.
@@ -7,7 +13,7 @@ import { api } from "./services/api";
     OBS.: Sempre que os dados dentro do contexto mudarem, os componentes que utilizam useContext serão renderizados.
 */
 
-export type TransactionsProviderProps = {
+type TransactionsProviderProps = {
   children: ReactNode;
 };
 
@@ -23,13 +29,13 @@ export type Transaction = {
 
 export type newTransaction = Omit<Transaction, "id" | "currency" | "createdAt">;
 
-export type TransactionsContext = {
+type TransactionsContextProps = {
   transactions: Transaction[];
   createNewTransaction: (newTransaction: newTransaction) => Promise<void>;
 };
 
-export const TransactionsContext = createContext<TransactionsContext>(
-  {} as TransactionsContext
+const TransactionsContext = createContext<TransactionsContextProps>(
+  {} as TransactionsContextProps
 );
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
@@ -56,4 +62,10 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
       {children}
     </TransactionsContext.Provider>
   );
+}
+
+export function useTransactions() {
+  const context = useContext(TransactionsContext);
+
+  return context;
 }

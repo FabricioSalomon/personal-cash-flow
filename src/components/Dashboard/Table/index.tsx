@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { TransactionsContext } from "../../../TransactionsContext";
+import { useTransactions } from "../../../hooks/useTransactions";
 import { DesktopTable } from "./DesktopTable";
 import { MobileTable } from "./MobileTable";
 import { NoTransactions } from "./NoTransactions";
@@ -9,7 +8,7 @@ type TableProps = {
 };
 
 export function Table({ handleNewTransactionModal }: TableProps) {
-  const { transactions } = useContext(TransactionsContext);
+  const { transactions } = useTransactions();
 
   return (
     <>

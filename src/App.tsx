@@ -3,8 +3,8 @@ import { useState } from "react";
 import { AddTransactionModal } from "./components/AddTransactionModal";
 import { Dashboard } from "./components/Dashboard";
 import { Header } from "./components/Header";
+import { TransactionsProvider } from "./hooks/useTransactions";
 import { GlobalStyle } from "./styles/global";
-import { TransactionsProvider } from "./TransactionsContext";
 
 // const Title = styled.h1`
 //   font-size: 64px;
